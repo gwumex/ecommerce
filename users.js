@@ -56,7 +56,6 @@ class UsersRepository {
         Object.assign(record, attrs);
         await this.writeAll(records)
     }
-
     async getOneBy (filters){
         const records = await this.getAll();
         for (let record of records){
@@ -66,17 +65,10 @@ class UsersRepository {
                     found = false;
                 }
             }
-
             if(found) {
                 return record;
             }
         }
     }
 }
-
-const test = async () => {
-    const repo = new UsersRepository('users.json');
-    const user = await repo.getOneBy({ password: 'hi'});
-    console.log(user);
-}
-test();
+module.exports = new UsersRepository('users.json');
