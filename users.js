@@ -1,12 +1,14 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const util = require('util');
 const { timeStamp } = require('console');
+const scrypt = util.promisify(crypto.scrypt);
 
 class UsersRepository {
     constructor(filename) {
-        if (!filename) {
-            throw new Error('Creating a repository requires a filename');
-        }
+        // if (!filename) {
+        //     throw new Error('Creating a repository requires a filename');
+        // }
         this.filename = filename;
         try {
             fs.accessSync(this.filename);
@@ -22,12 +24,29 @@ class UsersRepository {
     }
     //create a user
     async create(attrs) {
+        //
+    
         attrs.id = this.randomId();
+        //salt
+        const salt = crypto.randomBytes(8).toString('hex');
+
+        const buf = await scrypt(attrs.password, salt, 64);
+
         const records = await this.getAll();
-        records.push(attrs);
+        const record = {...attrs, password: `${buf.toString('hex')}.${salt}`};
+        records.push(record);
         await this.writeAll(records);
-        return attrs;
+        return record;
     }
+    //compare password
+    async comparePasswords(saved, supplied) {
+        const [hashed, salt] = saved.split('.');
+        console.log(hashed, salt);
+        const hashedSupplied = await scrypt(supplied, salt, 64);
+
+        return hashed === hashedSupplied.toString('hex');
+    }
+    //save passwords to data base
     async writeAll(records) {
         await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2));
     }
