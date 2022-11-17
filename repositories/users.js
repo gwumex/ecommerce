@@ -1,14 +1,11 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const util = require('util');
-const { timeStamp } = require('console');
 const scrypt = util.promisify(crypto.scrypt);
 
 class UsersRepository {
     constructor(filename) {
-        // if (!filename) {
-        //     throw new Error('Creating a repository requires a filename');
-        // }
+
         this.filename = filename;
         try {
             fs.accessSync(this.filename);
@@ -41,7 +38,6 @@ class UsersRepository {
     //compare password
     async comparePasswords(saved, supplied) {
         const [hashed, salt] = saved.split('.');
-        console.log(hashed, salt);
         const hashedSupplied = await scrypt(supplied, salt, 64);
 
         return hashed === hashedSupplied.toString('hex');
