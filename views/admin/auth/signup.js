@@ -1,5 +1,7 @@
+const layout = require('../layout');
+
 module.exports = ({req}) => {
-    return `
+    return layout({ content: `
     <div>
     welcome: ${req.session.userId}
         <p>hello</p>
@@ -10,5 +12,5 @@ module.exports = ({req}) => {
             <button type = "Submit">Sign Up</button>
         </form>
     </div>
-    `
+    `})
 }
