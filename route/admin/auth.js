@@ -6,6 +6,8 @@ const signInTemplate = require('../../views/admin/auth/signin');
 //validation
 const { check, validationResult } = require('express-validator');
 
+const { requireEmail, requirePassword, requirePasswordConfirmation } = require('./validator')
+
 const router = express.Router();
 router.get('/signup', (req, res) => {
     res.send(signUpTemplate({ req }));
@@ -13,27 +15,9 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup',
     [
-        check('email')
-            .trim()
-            .normalizeEmail()
-            .isEmail()
-            .custom( async (email) => {
-                const existingUser = await usersRepo.getOneBy({ email })
-                if (existingUser) {
-                    throw new Error('email in use');
-                }
-            }),
-        check('password')
-            .trim()
-            .isLength({min: 4, max: 20}),
-        check('passwordConfirmation')
-            .trim()
-            .isLength({min: 4, max: 20})
-            .custom((passwordConfirmation, { req }) => {
-                if (req.body.password !== passwordConfirmation) {
-                    throw new Error('Password must match')
-                }
-            }),
+        requireEmail,
+       requirePassword,
+       requirePasswordConfirmation
     ],
      async (req, res) => {
         const errors = validationResult(req);
