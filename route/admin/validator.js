@@ -6,6 +6,7 @@ module.exports = {
     .trim()
     .normalizeEmail()
     .isEmail()
+    .withMessage('Must be a valid email')
     .custom( async (email) => {
         const existingUser = await usersRepo.getOneBy({ email })
         if (existingUser) {

@@ -14,9 +14,6 @@ app.listen(3000, () => {
     console.log("you are listening on port 3000");
 })
 
-
-
-
     // const bodyParser = (req, res, next) => {
     //     if (req.method === "POST") {
     //         req.on('data', data => {

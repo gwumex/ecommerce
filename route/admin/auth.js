@@ -15,13 +15,16 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup',
     [
-        requireEmail,
+       requireEmail,
        requirePassword,
        requirePasswordConfirmation
     ],
      async (req, res) => {
         const errors = validationResult(req);
         console.log(errors);
+        if (!errors.isEmpty()) {
+            return res.send(signUpTemplate({ req, errors }));
+        }
         const { email, password, passwordConfirmation } = req.body;
         ///create a user in our user repo to represent
         const user = await usersRepo.create({ email: email, password: password });
@@ -33,7 +36,6 @@ router.post('/signup',
     `)
     });
 
-
 router.get('/signout', (req, res) => {
     req.session = null;
     res.send(`
@@ -43,13 +45,32 @@ router.get('/signout', (req, res) => {
 router.get('/signin', (req, res) => {
     res.send(signInTemplate())
 })
-router.post('/signin', async (req, res) => {
+
+//sign in router
+router.post('/signin', [
+    check('email')
+    .trim()
+    .normalizeEmail()
+    .isEmail()
+    .withMessage('Must be a valid Email')
+    .custom( async (email) => {
+        const user = await usersRepo.getOne({ email });
+        if (!user) {
+            throw new Error ('email not found 11');
+        }
+    }),
+    check('password')
+    .trim()
+],
+    async (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors);
     const { email, password } = req.body;
 
-    const user = await usersRepo.getOneBy({ email });
-    if (!user) {
-        return res.send('email not found');
-    }
+    // const user = await usersRepo.getOneBy({ email });
+    // if (!user) {
+    //     return res.send('email not found');
+    // }
     const compare = await usersRepo.comparePasswords(user.password, password);
 
     if (!compare) {
