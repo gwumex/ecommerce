@@ -4,6 +4,8 @@ let bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const authRouther = require('./route/admin/auth');
 const app = express();
+
+app.use(express.static('public'));
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(urlencodedParser);
 app.use(cookieSession({

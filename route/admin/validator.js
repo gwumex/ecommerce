@@ -15,13 +15,40 @@ module.exports = {
     }),
     requirePassword: check('password')
     .trim()
-    .isLength({min: 4, max: 20}),
+    .isLength({min: 4, max: 20})
+    .withMessage('must be between 4 and 20 characters'),
     requirePasswordConfirmation: check('passwordConfirmation')
     .trim()
     .isLength({min: 4, max: 20})
+    .withMessage('must be between 4 and 20 characters')
     .custom((passwordConfirmation, { req }) => {
-        if (req.body.password !== passwordConfirmation) {
-            throw new Error('Password must match')
+        console.log(passwordConfirmation, req.body.password);
+        if(req.body.password !== passwordConfirmation){
+                throw new Error ('password not match')
+        }       
+    }),
+    requireEmailExist: check('email')
+    .trim()
+    .normalizeEmail()
+    .isEmail()
+    .withMessage('Must be a valid Email')
+    .custom( async (email) => {
+        const user = await usersRepo.getOneBy({ email });
+        if (!user) {
+            throw new Error ('email not found 11');
+        }
+    }),
+    requireValidPasswordForUser: check('password')
+    .trim()
+    .custom( async (password, { req }) => {
+        const user = await usersRepo.getOneBy({ email: req.body.email });
+        if (!user) {
+            throw new Error('invalid password')
+        }       
+        const validPassword = await usersRepo.comparePasswords(user.password, password);        
+        if ( !validPassword ) {
+            throw new Error("invalid password")
         }
     })
+
 }
