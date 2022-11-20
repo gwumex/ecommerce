@@ -1,13 +1,12 @@
-const Repo = require('./repositories');
+const Repo = require('./repository');
 class ProductsRepositories extends Repo {
     async create(attrs) {
         //
         attrs.id = this.randomId();
         const records = await this.getAll();
-        const record = attrs;
-        records.push(record);
+        records.push(attrs);
         await this.writeAll(records);
-        return record;
+        return attrs;
     }
 }
 

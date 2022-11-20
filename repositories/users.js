@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const util = require('util');
 const scrypt = util.promisify(crypto.scrypt);
-const Repo = require('./repositories');
+const Repo = require('./repository');
 
 class UsersRepository extends Repo{
     // constructor(filename) {
@@ -42,7 +42,6 @@ class UsersRepository extends Repo{
     async comparePasswords(saved, supplied) {
         const [hashed, salt] = saved.split('.');
         const hashedSupplied = await scrypt(supplied, salt, 64);
-
         return hashed === hashedSupplied.toString('hex');
     }
     // //save passwords to data base
