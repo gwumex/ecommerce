@@ -1,16 +1,11 @@
 const layout = require('../../layout');
 const { getError } = require('../../helpers')
 
-module.exports = ({ errors }) => {
+module.exports = () => {
   return layout({
-    content: `
-        <form method="POST">
-            <input required placeholder="Title" name="title" />
-            <input required placeholder="Price" name="price" /> 
-            <input type="file" name="image" /> 
-            <button>Submit</button>                  
-        </form>            
+    content: `      
         <a href="/signup">Need an account? Sign Up</a>
+        <a href="/admin/products/new">Add new products</a>
          `
   });
 };
