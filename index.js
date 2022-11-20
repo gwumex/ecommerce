@@ -3,6 +3,7 @@ const { next } = require('process');
 let bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const authRouther = require('./route/admin/auth');
+const router = require('./route/admin/products')
 const app = express();
 
 app.use(express.static('public'));
@@ -12,6 +13,8 @@ app.use(cookieSession({
     keys: ['udhdjdjdjdjuiooprtcaieuu89867464je7474y4747446jhsh7474896789e67474902647487494']
 }))
 app.use(authRouther);
+app.use(router);
+
 app.listen(3000, () => {
     console.log("you are listening on port 3000");
 })
