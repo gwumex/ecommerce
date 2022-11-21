@@ -12,7 +12,7 @@ module.exports = ( {products}) => {
     <h1 class="title">Products</h1>
     ${renderedProducts}
     <a href="/admin/products/new">Add new Products</a>
-
+    <a href="/signout">Signout</a>
     `
   });
 };

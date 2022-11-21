@@ -29,6 +29,7 @@ module.exports = ({ errors }) => {
             <button class="button is-primary">Create</button>
           </form>
         </div>
+        <a href="/signout">Signout</a>
       </div>
     `
   });

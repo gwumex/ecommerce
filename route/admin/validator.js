@@ -31,9 +31,9 @@ module.exports = {
     .withMessage('must be between 4 and 20 characters')
     .custom((passwordConfirmation, { req }) => {
         console.log(passwordConfirmation, req.body.password);
-        if(req.body.password !== passwordConfirmation){
+        if(passwordConfirmation !== req.body.password ){
                 throw new Error ('password not match')
-        }       
+        }
     }),
     requireEmailExist: check('email')
     .trim()
