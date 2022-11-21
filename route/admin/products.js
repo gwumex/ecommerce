@@ -31,8 +31,6 @@ router.post('/admin/products/new',
         const image = req.file.buffer.toString('base64');
         const { title, price } = req.body;
         await productsRepo.create({ title, price, image });
-
-        console.log(req.file);
-        res.send('completed')
+        res.redirect('/admin/products');
     })
 module.exports = router;

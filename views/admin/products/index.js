@@ -11,6 +11,8 @@ module.exports = ( {products}) => {
     content: `      
     <h1 class="title">Products</h1>
     ${renderedProducts}
+    <a href="/admin/products/new">Add new Products</a>
+
     `
   });
 };
